@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Mail, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -7,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useDocuStore } from '@/lib/docuStore';
 import { toast } from 'sonner';
+import { sendEmail } from '@/lib/resend';
 
 interface EmailModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ interface EmailModalProps {
 }
 
 const EmailModal: React.FC<EmailModalProps> = ({ isOpen, onClose, documentId }) => {
-  const { shareDocument } = useDocuStore();
+  const { shareDocument, getDocumentById } = useDocuStore();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [signLink, setSignLink] = useState('');
@@ -25,21 +25,50 @@ const EmailModal: React.FC<EmailModalProps> = ({ isOpen, onClose, documentId }) 
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!validateEmail(email)) {
       toast.error("Please enter a valid email address");
       return;
     }
 
     setIsLoading(true);
-
-    // Simulate sending the email
-    setTimeout(() => {
+    
+    try {
       const link = shareDocument(documentId, email);
       setSignLink(link);
+      
+      const document = getDocumentById(documentId);
+      
+      if (!document) {
+        throw new Error("Document not found");
+      }
+      
+      await sendEmail({
+        to: email,
+        subject: `Document Ready for Signature: ${document.name}`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2>Document Ready for Signature</h2>
+            <p>You have received a document that requires your signature.</p>
+            <p><strong>Document name:</strong> ${document.name}</p>
+            <p>Please click the link below to view and sign the document:</p>
+            <a href="${link}" style="display: inline-block; background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin: 20px 0;">
+              View and Sign Document
+            </a>
+            <p>If you're unable to click the button, copy and paste this URL into your browser:</p>
+            <p style="word-break: break-all; color: #666;">${link}</p>
+            <p>Thank you!</p>
+          </div>
+        `
+      });
+      
+      toast.success(`Email sent to ${email}`);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.error('Failed to send email. Please try again.');
+    } finally {
       setIsLoading(false);
-      toast.success(`Invitation sent to ${email}`);
-    }, 1000);
+    }
   };
 
   const handleCopy = () => {

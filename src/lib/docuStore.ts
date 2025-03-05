@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { Document, Notification, SignatureData } from './types';
 import { toast } from 'sonner';

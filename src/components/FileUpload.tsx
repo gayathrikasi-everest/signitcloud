@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Upload, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -43,15 +42,23 @@ const FileUpload: React.FC = () => {
       });
     }, 200);
 
-    // Generate preview URL
-    const previewUrl = await readFileAsDataURL(file);
-    
-    // Add document with slight delay to show progress
-    setTimeout(() => {
-      addDocument(file, previewUrl);
+    try {
+      // Generate preview URL
+      const previewUrl = await readFileAsDataURL(file);
+      
+      // Add document with slight delay to show progress
+      setTimeout(() => {
+        addDocument(file, previewUrl);
+        setIsUploading(false);
+        setUploadProgress(0);
+      }, 2200);
+    } catch (error) {
+      console.error("Error processing file:", error);
+      toast.error("Failed to process the file. Please try again.");
       setIsUploading(false);
       setUploadProgress(0);
-    }, 2200);
+      clearInterval(interval);
+    }
   };
 
   const handleDrop = async (e: React.DragEvent) => {
@@ -76,9 +83,10 @@ const FileUpload: React.FC = () => {
   };
 
   const readFileAsDataURL = (file: File): Promise<string> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   };
