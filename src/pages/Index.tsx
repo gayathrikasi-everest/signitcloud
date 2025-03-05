@@ -12,9 +12,9 @@ const Index = () => {
   return <div className="min-h-screen bg-[F9EFDF] bg-[#faefe4]">
       <div className="container max-w-screen-lg py-8">
         <header className="flex justify-between items-center mb-8">
-          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg">
-            <h1 className="text-3xl font-semibold font-poppins">DocuSign Clone</h1>
-            <p className="text-muted-foreground mt-1 font-poppins">Upload, share, and sign documents effortlessly</p>
+          <div className="backdrop-blur-sm p-4 rounded-lg bg-zinc-900">
+            <h1 className="text-3xl font-semibold font-poppins text-stone-100">DocuSign Clone</h1>
+            <p className="mt-1 font-poppins text-[ECA508] text-[#f0a801]">Upload, share, and sign documents effortlessly</p>
           </div>
           
           <div>
@@ -23,7 +23,7 @@ const Index = () => {
         </header>
         
         <main className="space-y-8 animate-fade-in">
-          {documents.length === 0 || !currentDocument ? <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg">
+          {documents.length === 0 || !currentDocument ? <div className="backdrop-blur-sm p-6 rounded-lg bg-gray-100">
               <FileUpload />
             </div> : <div className="space-y-8">
               <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg">
