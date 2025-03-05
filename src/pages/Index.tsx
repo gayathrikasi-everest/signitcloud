@@ -22,7 +22,7 @@ const Index = () => {
         </header>
         
         <main className="space-y-8 animate-fade-in">
-          {documents.length === 0 || !currentDocument ? <div className="backdrop-blur-sm p-6 rounded-lg bg-slate-200 py-[38px]">
+          {documents.length === 0 || !currentDocument ? <div className="backdrop-blur-sm p-6 rounded-lg py-[38px] mx-0 bg-white">
               <FileUpload />
             </div> : <div className="space-y-8">
               <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg">
