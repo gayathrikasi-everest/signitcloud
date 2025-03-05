@@ -9,7 +9,7 @@ const Index = () => {
     documents,
     currentDocument
   } = useDocuStore();
-  return <div className="min-h-screen bg-[F9EFDF]">
+  return <div className="min-h-screen bg-[F9EFDF] bg-[#faefe4]">
       <div className="container max-w-screen-lg py-8">
         <header className="flex justify-between items-center mb-8">
           <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg">
