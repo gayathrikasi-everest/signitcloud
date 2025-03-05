@@ -84,7 +84,7 @@ const FileUpload: React.FC = () => {
   return <Card onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop} className="bg-slate-300">
       <input ref={fileInputRef} type="file" accept=".pdf,image/*" className="hidden" onChange={handleFileInputChange} />
       
-      <div className="flex flex-col items-center text-center py-[56px]">
+      <div className="flex flex-col items-center text-center py-[56px] bg-slate-100">
         {isUploading ? <div className="w-full max-w-xs">
             <div className="flex items-center space-x-2 mb-2">
               <File className="h-6 w-6 text-primary animate-pulse" />
@@ -92,7 +92,7 @@ const FileUpload: React.FC = () => {
             </div>
             <Progress value={uploadProgress} className="h-2 w-full" />
           </div> : <>
-            <div className="h-16 w-16 bg-secondary/80 rounded-full flex items-center justify-center mb-4">
+            <div className="h-16 w-16 rounded-full flex items-center justify-center mb-4 bg-slate-300">
               <Upload className="h-8 w-8 text-primary bg-[ECA508] bg-[#e5a107]/0" />
             </div>
             <h3 className="text-xl font-medium mb-2">Upload a document</h3>
