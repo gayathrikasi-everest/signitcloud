@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useDocuStore } from '@/lib/docuStore';
+import { toast } from 'sonner';
 
 const FileUpload: React.FC = () => {
   const { addDocument } = useDocuStore();

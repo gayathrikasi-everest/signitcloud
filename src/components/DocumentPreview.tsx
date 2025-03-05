@@ -32,12 +32,12 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ document }) => {
 
   const handleDownload = () => {
     // Create an anchor element and trigger download
-    const link = document.createElement('a');
+    const link = window.document.createElement('a');
     link.href = document.previewUrl;
     link.download = document.name;
-    document.body.appendChild(link);
+    window.document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    window.document.body.removeChild(link);
   };
   
   // Generate mock document pages for preview
