@@ -1,26 +1,19 @@
-
 import React from 'react';
 import { useDocuStore } from '@/lib/docuStore';
 import FileUpload from '@/components/FileUpload';
 import DocumentPreview from '@/components/DocumentPreview';
 import NotificationBell from '@/components/NotificationBell';
 import { Toaster } from '@/components/ui/toaster';
-
 const Index = () => {
   const {
     documents,
     currentDocument
   } = useDocuStore();
-
   return <div className="min-h-screen bg-[F9EFDF] bg-[#faefe4]">
       <div className="container max-w-screen-lg py-8">
         <header className="flex justify-between items-center mb-8">
           <div className="h-20 w-20">
-            <img 
-              src="/lovable-uploads/36356df9-6230-4549-8a41-60988d342fb6.png" 
-              alt="DocuSign Logo" 
-              className="h-full w-full object-contain"
-            />
+            <img alt="DocuSign Logo" src="/lovable-uploads/6a377da9-77be-4c97-8b61-87978d3fe20d.png" className="h-full w-full object-contain" />
           </div>
           
           <div>
@@ -53,5 +46,4 @@ const Index = () => {
       <Toaster />
     </div>;
 };
-
 export default Index;
