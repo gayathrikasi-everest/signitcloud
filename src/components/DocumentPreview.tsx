@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ExternalLink, Download, Clock, CheckCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -74,9 +74,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ document }) => {
               className="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-b from-transparent to-background/80"
             >
               <Button
-                variant="secondary"
+                variant="default"
                 onClick={() => setShowFullPreview(true)}
-                className="hover-lift"
+                className="hover-lift font-poppins"
               >
                 Show Full Document
               </Button>
@@ -93,15 +93,15 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ document }) => {
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-medium">{document.name}</h2>
-          <div className="flex items-center mt-1 text-sm text-muted-foreground">
+          <h2 className="text-2xl font-medium font-poppins">{document.name}</h2>
+          <div className="flex items-center mt-1 text-sm text-muted-foreground font-poppins">
             <Clock className="h-4 w-4 mr-1" />
             <span>Uploaded {formatDate(document.createdAt)}</span>
             
             {document.signatureStatus === 'signed' && (
               <Badge variant="outline" className="ml-3 bg-green-50 text-green-600 border-green-200 flex items-center">
                 <CheckCircle className="h-3 w-3 mr-1" />
-                Signed
+                <span className="font-poppins">Signed</span>
               </Badge>
             )}
           </div>
@@ -109,12 +109,12 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ document }) => {
         
         <div className="flex gap-3">
           {document.signatureStatus === 'signed' ? (
-            <Button onClick={handleDownload} className="hover-lift">
+            <Button onClick={handleDownload} className="hover-lift font-poppins">
               <Download className="h-4 w-4 mr-2" />
               Download
             </Button>
           ) : (
-            <Button onClick={openEmailModal} className="hover-lift">
+            <Button onClick={openEmailModal} className="hover-lift font-poppins">
               <ExternalLink className="h-4 w-4 mr-2" />
               Share via Email
             </Button>

@@ -67,12 +67,12 @@ const SignDocument = () => {
 
   if (!document) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center animate-pulse">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center animate-pulse bg-white/80 backdrop-blur-sm p-8 rounded-lg">
           <div className="loading-dots">
             <span>•</span><span>•</span><span>•</span>
           </div>
-          <p className="mt-4 text-muted-foreground">Loading document...</p>
+          <p className="mt-4 text-muted-foreground font-poppins">Loading document...</p>
         </div>
       </div>
     );
@@ -80,16 +80,16 @@ const SignDocument = () => {
   
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-        <div className="text-center max-w-md animate-scale-in">
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="text-center max-w-md animate-scale-in bg-white/80 backdrop-blur-sm p-8 rounded-lg">
           <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100">
             <CheckCircle className="h-8 w-8 text-green-500" />
           </div>
-          <h1 className="text-2xl font-semibold mb-2">Document Signed Successfully!</h1>
-          <p className="text-muted-foreground mb-6">
+          <h1 className="text-2xl font-semibold mb-2 font-poppins">Document Signed Successfully!</h1>
+          <p className="text-muted-foreground mb-6 font-poppins">
             Thank you for signing "{document.name}". The sender has been notified.
           </p>
-          <Button onClick={() => navigate('/')}>
+          <Button onClick={() => navigate('/')} className="font-poppins">
             Return Home
           </Button>
         </div>
@@ -98,19 +98,19 @@ const SignDocument = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30">
+    <div className="min-h-screen">
       <div className="container max-w-screen-md py-8">
         <Button
           variant="ghost"
-          className="mb-6"
+          className="mb-6 bg-white/80 backdrop-blur-sm text-foreground hover:bg-white/90 font-poppins"
           onClick={() => navigate('/')}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Documents
         </Button>
         
-        <div className="bg-card rounded-lg shadow-elegant p-6 border border-border">
-          <h1 className="text-2xl font-semibold mb-6">Sign Document: {document.name}</h1>
+        <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-elegant p-6 border border-border">
+          <h1 className="text-2xl font-semibold mb-6 font-poppins">Sign Document: {document.name}</h1>
           
           <div className="mb-8">
             <div className="bg-white rounded-lg shadow-sm border border-border overflow-hidden">
@@ -122,8 +122,8 @@ const SignDocument = () => {
                 />
               ) : (
                 <div className="p-8 text-center">
-                  <p className="text-muted-foreground">Document Preview</p>
-                  <p className="font-medium mt-2">{document.name}</p>
+                  <p className="text-muted-foreground font-poppins">Document Preview</p>
+                  <p className="font-medium mt-2 font-poppins">{document.name}</p>
                 </div>
               )}
             </div>
@@ -131,13 +131,14 @@ const SignDocument = () => {
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="signerName">Your Name</Label>
+              <Label htmlFor="signerName" className="font-poppins">Your Name</Label>
               <Input
                 id="signerName"
                 value={signerName}
                 onChange={(e) => setSignerName(e.target.value)}
                 placeholder="Type your full name"
                 required
+                className="font-poppins"
               />
             </div>
             
@@ -149,7 +150,7 @@ const SignDocument = () => {
             
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full font-poppins"
               disabled={!signature || isSigning}
             >
               {isSigning ? 'Submitting Signature...' : 'Complete Signing'}

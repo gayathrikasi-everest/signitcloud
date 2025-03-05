@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Mail, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -47,12 +48,12 @@ const EmailModal: React.FC<EmailModalProps> = ({ isOpen, onClose, documentId }) 
         to: email,
         subject: `Document Ready for Signature: ${document.name}`,
         html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="font-family: 'Poppins', sans-serif; max-width: 600px; margin: 0 auto;">
             <h2>Document Ready for Signature</h2>
             <p>You have received a document that requires your signature.</p>
             <p><strong>Document name:</strong> ${document.name}</p>
             <p>Please click the link below to view and sign the document:</p>
-            <a href="${link}" style="display: inline-block; background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin: 20px 0;">
+            <a href="${link}" style="display: inline-block; background: #222222; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin: 20px 0; font-family: 'Poppins', sans-serif;">
               View and Sign Document
             </a>
             <p>If you're unable to click the button, copy and paste this URL into your browser:</p>
@@ -86,22 +87,22 @@ const EmailModal: React.FC<EmailModalProps> = ({ isOpen, onClose, documentId }) 
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md backdrop-blur-sm bg-background/95 border-border animate-scale-in">
+      <DialogContent className="sm:max-w-md bg-white border-border animate-scale-in font-poppins">
         <DialogHeader>
-          <DialogTitle className="text-xl">Share for Signature</DialogTitle>
+          <DialogTitle className="text-xl font-poppins">Share for Signature</DialogTitle>
         </DialogHeader>
         <div className="space-y-6 pt-4">
           {!signLink ? (
             <div className="space-y-4 animate-fade-in">
               <div className="space-y-2">
-                <Label htmlFor="email">Recipient's email address</Label>
+                <Label htmlFor="email" className="font-poppins">Recipient's email address</Label>
                 <div className="flex items-center border border-input rounded-md focus-within:ring-1 focus-within:ring-ring overflow-hidden">
                   <div className="p-2 bg-muted/50">
                     <Mail className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <Input
                     id="email"
-                    className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 font-poppins"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="email@example.com"
@@ -109,16 +110,16 @@ const EmailModal: React.FC<EmailModalProps> = ({ isOpen, onClose, documentId }) 
                   />
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground font-poppins">
                 We'll send an email with a link to sign the document
               </p>
             </div>
           ) : (
             <div className="space-y-4 animate-fade-in">
               <div className="space-y-2">
-                <Label>Signature link</Label>
+                <Label className="font-poppins">Signature link</Label>
                 <div className="flex items-center">
-                  <div className="flex-1 border border-input rounded-l-md p-2 bg-secondary/50 text-sm truncate">
+                  <div className="flex-1 border border-input rounded-l-md p-2 bg-secondary/50 text-sm truncate font-poppins">
                     {signLink}
                   </div>
                   <Button
@@ -134,7 +135,7 @@ const EmailModal: React.FC<EmailModalProps> = ({ isOpen, onClose, documentId }) 
                   </Button>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground font-poppins">
                 Link has been sent to {email}. You can also copy and share this link manually.
               </p>
             </div>
@@ -143,13 +144,13 @@ const EmailModal: React.FC<EmailModalProps> = ({ isOpen, onClose, documentId }) 
         <DialogFooter className="sm:justify-end">
           {!signLink ? (
             <>
-              <Button variant="outline" onClick={handleClose}>
+              <Button variant="outline" onClick={handleClose} className="font-poppins bg-white text-foreground hover:bg-gray-100">
                 Cancel
               </Button>
               <Button 
                 onClick={handleSend} 
                 disabled={!email || isLoading}
-                className="relative overflow-hidden group"
+                className="relative overflow-hidden group font-poppins"
               >
                 <span className="relative z-10">
                   {isLoading ? 'Sending...' : 'Send'}
@@ -158,7 +159,7 @@ const EmailModal: React.FC<EmailModalProps> = ({ isOpen, onClose, documentId }) 
               </Button>
             </>
           ) : (
-            <Button onClick={handleClose}>Close</Button>
+            <Button onClick={handleClose} className="font-poppins">Close</Button>
           )}
         </DialogFooter>
       </DialogContent>
