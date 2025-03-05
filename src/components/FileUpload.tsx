@@ -95,7 +95,7 @@ const FileUpload: React.FC = () => {
             <div className="h-16 w-16 rounded-full flex items-center justify-center mb-4 bg-slate-300">
               <Upload className="h-8 w-8 text-primary bg-[ECA508] bg-[#e5a107]/0" />
             </div>
-            <h3 className="text-xl font-medium mb-2">Upload a document</h3>
+            <h3 className="font-medium mb-2 text-2xl">Upload a document</h3>
             <p className="text-muted-foreground mb-4 max-w-sm">
               Drag and drop your PDF or image file here, or click the button below
             </p>

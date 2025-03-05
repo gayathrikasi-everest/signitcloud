@@ -79,12 +79,12 @@ const NotificationBell: React.FC = () => {
         duration: 0.2
       }} className="absolute right-0 mt-2 w-80 bg-card rounded-lg shadow-elegant-lg overflow-hidden z-50 border border-border">
             <div className="p-4 border-b border-border">
-              <h3 className="font-medium">Notifications</h3>
+              <h3 className="font-medium text-xl">Notifications</h3>
             </div>
             
             <div className="max-h-96 overflow-y-auto">
               {notifications.length === 0 ? <div className="p-6 text-center text-muted-foreground">
-                  <p>No notifications yet</p>
+                  <p className="text-sm">No notifications yet</p>
                 </div> : <div>
                   {notifications.map(notification => <div key={notification.id} className={`
                         p-4 border-b border-border last:border-b-0 cursor-pointer
