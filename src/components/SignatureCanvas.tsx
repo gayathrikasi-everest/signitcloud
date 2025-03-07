@@ -1,9 +1,8 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Trash2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { SignatureData } from '@/lib/types';
+import { SignatureData } from '@/types';
 
 interface SignatureCanvasProps {
   onSign: (signatureData: SignatureData) => void;
@@ -98,9 +97,13 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
     if (canvasRef.current && hasSignature) {
       const dataUrl = canvasRef.current.toDataURL('image/png');
       onSign({
+        signature: dataUrl,
+        signedAt: new Date().toISOString(),
+        signerName: signerName || '',
+        signerEmail: '', // This will be set by the parent component
         dataUrl,
-        date: new Date(),
-        signerName
+        width: canvasRef.current.width,
+        height: canvasRef.current.height
       });
     }
   };
@@ -153,16 +156,6 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
       
       <div className="flex justify-between mt-4">
         <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={clearCanvas}
-          className="text-xs"
-        >
-          <Trash2 className="h-3 w-3 mr-1" />
-          Clear
-        </Button>
-        
-        <Button 
           size="sm" 
           onClick={saveSignature}
           disabled={!hasSignature}
@@ -170,6 +163,15 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
         >
           <Check className="h-3 w-3 mr-1" />
           Confirm Signature
+        </Button>
+
+        <Button 
+          variant="outline" 
+          size="icon"
+          onClick={clearCanvas}
+          className="h-7 w-7"
+        >
+          <Trash2 className="h-3 w-3" />
         </Button>
       </div>
     </Card>

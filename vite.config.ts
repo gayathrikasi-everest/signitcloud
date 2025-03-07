@@ -19,4 +19,12 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ['react-pdf', 'pdfjs-dist/build/pdf.worker.min.js'],
+  },
+  build: {
+    commonjsOptions: {
+      include: [/react-pdf/, /pdfjs-dist/],
+    },
+  },
 }));

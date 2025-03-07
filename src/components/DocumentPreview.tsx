@@ -1,24 +1,42 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ExternalLink, Download, Clock, CheckCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useDocuStore } from '@/lib/docuStore';
-import EmailModal from './EmailModal';
+import ShareLinkModal from './ShareLinkModal';
 import { Document } from '@/lib/types';
+import { Document as PDFDocument, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+
+// Set up PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
 
 interface DocumentPreviewProps {
   document: Document;
 }
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ document }) => {
-  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
-  const [showFullPreview, setShowFullPreview] = useState(false);
-  const [numPages, setNumPages] = useState(3); // Simulate multiple pages
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [numPages, setNumPages] = useState<number | null>(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [error, setError] = useState<string | null>(null);
   
-  const openEmailModal = () => setIsEmailModalOpen(true);
-  const closeEmailModal = () => setIsEmailModalOpen(false);
+  // Memoize the options to prevent unnecessary reloads
+  const pdfOptions = useMemo(() => ({
+    cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/cmaps/',
+    cMapPacked: true,
+    standardFontDataUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/standard_fonts/',
+  }), []);
+
+  useEffect(() => {
+    // Clean up any previous errors when document changes
+    setError(null);
+  }, [document]);
+
+  const openShareModal = () => setIsShareModalOpen(true);
+  const closeShareModal = () => setIsShareModalOpen(false);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -39,54 +57,88 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ document }) => {
     link.click();
     window.document.body.removeChild(link);
   };
+
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages);
+    setError(null);
+  };
+
+  const onDocumentLoadError = (error: Error) => {
+    console.error('Error loading PDF:', error);
+    setError('Failed to load PDF. Please try again.');
+  };
+
+  const changePage = (offset: number) => {
+    setPageNumber(prevPageNumber => prevPageNumber + offset);
+  };
+
+  const previousPage = () => {
+    changePage(-1);
+  };
+
+  const nextPage = () => {
+    changePage(1);
+  };
   
-  // Generate mock document pages for preview
   const renderPages = () => {
-    const pages = [];
-    const maxPages = showFullPreview ? numPages : 2; // Only show 2 pages initially
-    
-    for (let i = 0; i < maxPages; i++) {
-      pages.push(
-        <div 
-          key={i} 
-          className="document-page w-full p-4 rounded animate-scale-in"
-          style={{ animationDelay: `${i * 100}ms` }}
-        >
-          {document.type.includes('pdf') ? (
-            <div className="p-6">
-              <div className="h-6 w-3/4 bg-gray-200 rounded mb-4"></div>
-              <div className="h-4 w-full bg-gray-100 rounded mb-2"></div>
-              <div className="h-4 w-full bg-gray-100 rounded mb-2"></div>
-              <div className="h-4 w-4/5 bg-gray-100 rounded mb-6"></div>
-              <div className="h-20 w-full bg-gray-50 rounded border border-gray-200 mb-4"></div>
-              <div className="h-4 w-full bg-gray-100 rounded mb-2"></div>
-              <div className="h-4 w-3/4 bg-gray-100 rounded"></div>
-            </div>
-          ) : (
-            <img 
-              src={document.previewUrl} 
-              alt={document.name} 
-              className="w-full h-auto rounded object-contain"
+    if (document.type.includes('pdf')) {
+      return (
+        <div className="space-y-4">
+          <PDFDocument
+            file={document.previewUrl}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={onDocumentLoadError}
+            className="flex flex-col items-center"
+            loading={
+              <div className="flex items-center justify-center p-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            }
+            error={
+              <div className="flex items-center justify-center p-8 text-red-500">
+                {error || 'Failed to load PDF. Please try again.'}
+              </div>
+            }
+            options={pdfOptions}
+          >
+            <Page 
+              pageNumber={pageNumber} 
+              width={Math.min(window.innerWidth - 64, 800)}
+              className="shadow-lg"
             />
-          )}
-          {i === maxPages - 1 && maxPages < numPages && (
-            <div 
-              className="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-b from-transparent to-background/80"
-            >
-              <Button
-                variant="default"
-                onClick={() => setShowFullPreview(true)}
-                className="hover-lift font-poppins"
-              >
-                Show Full Document
-              </Button>
-            </div>
-          )}
+            {numPages && numPages > 1 && (
+              <div className="flex items-center justify-center gap-4 mt-4">
+                <Button
+                  variant="outline"
+                  onClick={previousPage}
+                  disabled={pageNumber <= 1}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Page {pageNumber} of {numPages}
+                </span>
+                <Button
+                  variant="outline"
+                  onClick={nextPage}
+                  disabled={pageNumber >= numPages}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </PDFDocument>
         </div>
       );
+    } else {
+      return (
+        <img 
+          src={document.previewUrl} 
+          alt={document.name} 
+          className="w-full h-auto rounded object-contain"
+        />
+      );
     }
-    
-    return pages;
   };
 
   return (
@@ -114,9 +166,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ document }) => {
               Download
             </Button>
           ) : (
-            <Button onClick={openEmailModal} className="hover-lift font-poppins">
+            <Button onClick={openShareModal} className="hover-lift font-poppins">
               <ExternalLink className="h-4 w-4 mr-2" />
-              Share via Email
+              Share for Signature
             </Button>
           )}
         </div>
@@ -128,9 +180,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ document }) => {
         </div>
       </Card>
       
-      <EmailModal
-        isOpen={isEmailModalOpen}
-        onClose={closeEmailModal}
+      <ShareLinkModal
+        isOpen={isShareModalOpen}
+        onClose={closeShareModal}
         documentId={document.id}
       />
     </div>
